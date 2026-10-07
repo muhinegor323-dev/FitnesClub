@@ -1,0 +1,124 @@
+@startuml fitnesclub_usecase
+
+left to right direction
+
+skinparam packageStyle rectangle
+skinparam shadowing false
+skinparam usecase {
+    BackgroundColor #A69CF2
+    BorderColor #FFFFFF
+    FontSize 12
+}
+skinparam actor {
+    FontSize 12
+}
+
+actor "Администратор" as Admin
+actor "Клиент" as Client
+
+rectangle "Система учёта клиентов фитнес-клуба" {
+
+    ' ==========================================
+
+    ' АДМИНИСТРАТОР
+
+    ' ==========================================
+
+    usecase "Вход в систему" as AdminLogin
+
+    usecase "Меню записи" as BookingMenu
+
+    usecase "Просмотр списка\nтренеров и времени" as ViewTrainers
+
+    usecase "Записать клиента\nна тренировку" as BookTraining
+
+    usecase "Отмена записи" as CancelBooking
+
+    usecase "Добавление\nадминистратора" as AddAdmin
+
+    ' ==========================================
+
+    ' МЕНЮ КЛИЕНТА
+
+    ' ==========================================
+
+    usecase "Меню клиента" as ClientMenu
+
+    usecase "Найти клиента в базе" as FindClient
+
+    usecase "Зарегистрировать\nклиента" as RegisterClient
+
+    usecase "Просмотр данных\nклиента" as ViewClient
+
+    usecase "Изменить данные\nклиента" as EditClient
+
+    ' ==========================================
+
+    ' КЛИЕНТ
+
+    ' ==========================================
+
+    usecase "Вход в систему" as ClientLogin
+
+    ' ==========================================
+
+    ' СВЯЗИ АДМИНИСТРАТОРА
+
+    ' ==========================================
+
+    Admin -- AdminLogin
+
+    AdminLogin -- BookingMenu
+
+    AdminLogin -- AddAdmin
+
+    AdminLogin -- ClientMenu
+
+    ' ==========================================
+
+    ' МЕНЮ ЗАПИСИ
+
+    ' ==========================================
+
+    BookingMenu -- ViewTrainers
+
+    BookingMenu -- BookTraining
+
+    BookingMenu -- CancelBooking
+
+    ' ==========================================
+
+    ' МЕНЮ КЛИЕНТА
+
+    ' ==========================================
+
+    ClientMenu -- FindClient
+
+    ClientMenu -- RegisterClient
+
+    ClientMenu -- ViewClient
+
+    ClientMenu -- EditClient
+
+    ' ==========================================
+
+    ' СВЯЗИ КЛИЕНТА
+
+    ' ==========================================
+
+    Client -- ClientLogin
+
+    ClientLogin -- ViewClient
+
+    ClientLogin -- EditClient
+
+   
+
+    
+    
+
+    
+
+}
+
+@enduml
