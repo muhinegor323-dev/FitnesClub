@@ -5,7 +5,7 @@ left to right direction
 skinparam packageStyle rectangle
 skinparam shadowing false
 skinparam usecase {
-    BackgroundColor #A69CF2
+    BackgroundColor #f2b69c
     BorderColor #FFFFFF
     FontSize 12
 }
@@ -112,12 +112,9 @@ rectangle "Система учёта клиентов фитнес-клуба" {
 
     ClientLogin -- EditClient
 
-   
 
-    
-    
 
-    
+
 
 }
 
