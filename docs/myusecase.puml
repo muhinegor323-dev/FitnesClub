@@ -2,16 +2,7 @@
 
 left to right direction
 
-skinparam packageStyle rectangle
-skinparam shadowing false
-skinparam usecase {
-    BackgroundColor #f2b69c
-    BorderColor #FFFFFF
-    FontSize 12
-}
-skinparam actor {
-    FontSize 12
-}
+
 
 actor "Администратор" as Admin
 actor "Клиент" as Client
