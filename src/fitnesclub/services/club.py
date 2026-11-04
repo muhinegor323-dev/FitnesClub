@@ -68,7 +68,7 @@ def add_admin(actor, name, login, email, password):
         _require_admin(actor)
     return _save(
         admins.create, "Логин или email администратора уже используется",
-        name=_required(name, "Имя"), login=_required(login, "Логин").lower(),
+        name=_required(name, "ФИО"), login=_required(login, "Логин").lower(),
         email=_email(email), password_hash=_hash_password(password),
     )
 
@@ -78,7 +78,7 @@ def _client_details(name, phone, email):
     digits = "".join(char for char in phone if char in "0123456789")
     if any(char not in "0123456789+()- " for char in phone) or not 7 <= len(digits) <= 15:
         raise ValueError("Введите корректный телефон")
-    return dict(name=_required(name, "Имя"), phone_number=digits, email=_email(email))
+    return dict(name=_required(name, "ФИО"), phone_number=digits, email=_email(email))
 
 
 def register_client(actor, name, phone, email, password):
@@ -129,7 +129,7 @@ def add_coach(actor, name, specialization, email):
     _require_admin(actor)
     return _save(
         coaches.create, "Email тренера уже используется",
-        name=_required(name, "Имя"), specialization=specialization.strip() or None,
+        name=_required(name, "ФИО"), specialization=specialization.strip() or None,
         email=_email(email),
     )
 
