@@ -122,45 +122,12 @@ git clone <repository-url>
 cd RoomBook
 ```
 
-### 2. Создание виртуального окружения
-
-```bash
-python -m venv .venv
-```
-
-### 3. Активация виртуального окружения
-
-Windows PowerShell:
-
-```powershell
-.venv\Scripts\Activate.ps1
-```
-
-Windows Command Prompt:
-
-```cmd
-.venv\Scripts\activate.bat
-```
-
-Linux и macOS:
-
-```bash
-source .venv/bin/activate
-```
-
-### 4. Установка зависимостей
-
-```bash
-pip install -r
-uirements.txt
-```
-
 ## Запуск приложения
 
 Из корневой папки проекта выполните:
 
 ```bash
-python -m src.fitnesclub.main
+& "$env:USERPROFILE\.local\bin\python3.14.exe" -m src.fitnesclub.main
 ```
 
 После запуска в консоли будет отображено главное меню приложения.
