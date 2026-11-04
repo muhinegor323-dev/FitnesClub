@@ -44,7 +44,7 @@ def _print_client(client):
 
 
 def _find_clients(actor):
-    matches = club.find_clients(actor, input("Имя, телефон, email или ID: "))
+    matches = club.find_clients(actor, input("ФИО, телефон, email или ID: "))
     if not matches:
         print("Клиенты не найдены")
     for client in matches:
@@ -60,7 +60,7 @@ def _edit_client(actor, client_id=None):
     client = club.get_client(actor, client_id)
     club.edit_client(
         actor, client_id,
-        input(f"Имя [{client.name}]: ").strip() or client.name,
+        input(f"ФИО [{client.name}]: ").strip() or client.name,
         input(f"Телефон [{client.phone_number}]: ").strip() or client.phone_number,
         input(f"Email [{client.email}]: ").strip() or client.email,
     )
@@ -128,7 +128,7 @@ def _bookings_menu(actor):
 
 def _add_coach(actor):
     coach_id = club.add_coach(
-        actor, input("Имя: "), input("Специализация: "), input("Email: "),
+        actor, input("ФИО (фамилия, имя, отчество): "), input("Специализация: "), input("Email: "),
     )
     print(f"Тренер добавлен. ID: {coach_id}")
 
