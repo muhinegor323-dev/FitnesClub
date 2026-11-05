@@ -128,7 +128,7 @@ cd RoomBook
 Из корневой папки проекта выполните:
 
 ```bash
-& "$env:USERPROFILE\.local\bin\python3.14.exe" -m src.fitnesclub.main
+.\.venv\Scripts\python.exe -m src.fitnesclub.main
 ```
 
 После запуска в консоли будет отображено главное меню приложения.
