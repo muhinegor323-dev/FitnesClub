@@ -141,6 +141,7 @@ cd RoomBook
 * Python 3.14;
 * Git;
 * Visual Studio Code;
+* Виртуальное окружение .venv
 
 ## Разработка
 
