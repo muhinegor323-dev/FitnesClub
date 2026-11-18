@@ -1,13 +1,13 @@
-from .services import club
+from .services import auth_serv, users_serv
 
 
 def login(role):
     identifier = input("Логин: " if role == "admin" else "Email: ")
-    return club.authenticate(role, identifier, input("Пароль: "))
+    return auth_serv.authenticate(role, identifier, input("Пароль: "))
 
 
 def register_admin(actor=None):
-    admin_id = club.add_admin(
+    admin_id = auth_serv.add_admin(
         actor, input("ФИО: "), input("Логин: "), input("Email: "),
         input("Пароль (от 8 символов): "),
     )
@@ -15,7 +15,7 @@ def register_admin(actor=None):
 
 
 def register_client(actor):
-    client_id = club.register_client(
+    client_id = users_serv.register_client(
         actor, input("ФИО: "), input("Телефон: "), input("Email: "),
         input("Пароль (от 8 символов): "),
     )

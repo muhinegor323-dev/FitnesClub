@@ -1,32 +1,8 @@
-import sqlite3
 from functools import partial
 
 from . import auth
-from .services import club
-
-
-def _menu(title, actions, *, once=False):
-    while True:
-        print(f"\n=== {title} ===")
-        for index, (label, _) in enumerate(actions, start=1):
-            print(f"{index}. {label}")
-        print("0. Выход / назад")
-        choice = input("Выберите действие: ").strip()
-        if choice == "0":
-            return
-        choices = {str(index): action for index, (_, action) in enumerate(actions, start=1)}
-        action = choices.get(choice)
-        if action is None:
-            print("Выберите пункт меню")
-            continue
-        try:
-            action()
-            if once:
-                return
-        except ValueError as exc:
-            print(f"Ошибка: {exc}")
-        except sqlite3.Error:
-            print("Ошибка работы с базой данных")
+from .services import bookings_serv, schedule_serv, users_serv
+from .utils import run_menu
 
 
 def _id(label):
@@ -44,7 +20,7 @@ def _print_client(client):
 
 
 def _find_clients(actor):
-    matches = club.find_clients(actor, input("ФИО, телефон, email или ID: "))
+    matches = users_serv.find_clients(actor, input("ФИО, телефон, email или ID: "))
     if not matches:
         print("Клиенты не найдены")
     for client in matches:
@@ -52,13 +28,13 @@ def _find_clients(actor):
 
 
 def _view_client(actor, client_id=None):
-    _print_client(club.get_client(actor, client_id or _id("ID клиента")))
+    _print_client(users_serv.get_client(actor, client_id or _id("ID клиента")))
 
 
 def _edit_client(actor, client_id=None):
     client_id = client_id or _id("ID клиента")
-    client = club.get_client(actor, client_id)
-    club.edit_client(
+    client = users_serv.get_client(actor, client_id)
+    users_serv.edit_client(
         actor, client_id,
         input(f"ФИО [{client.name}]: ").strip() or client.name,
         input(f"Телефон [{client.phone_number}]: ").strip() or client.phone_number,
@@ -70,12 +46,12 @@ def _edit_client(actor, client_id=None):
 def _delete_client(actor):
     client_id = _id("ID клиента")
     if input("Удалить клиента? (да/нет): ").strip().lower() == "да":
-        club.delete_client(actor, client_id)
+        users_serv.delete_client(actor, client_id)
         print("Клиент удалён")
 
 
 def _clients_menu(actor):
-    _menu("Клиенты", [
+    run_menu("Клиенты", [
         ("Зарегистрировать клиента", partial(auth.register_client, actor)),
         ("Найти клиента", partial(_find_clients, actor)),
         ("Просмотреть карточку", partial(_view_client, actor)),
@@ -85,7 +61,7 @@ def _clients_menu(actor):
 
 
 def _schedule(actor):
-    trainers, bookings = club.schedule(actor, input("Дата (ГГГГ-ММ-ДД): "))
+    trainers, bookings = schedule_serv.schedule(actor, input("Дата (ГГГГ-ММ-ДД): "))
     if not trainers:
         print("Тренеры ещё не добавлены")
     for coach in trainers:
@@ -95,7 +71,7 @@ def _schedule(actor):
 
 
 def _book(actor):
-    record_id = club.book_training(
+    record_id = bookings_serv.book_training(
         actor, _id("ID клиента"), _id("ID тренера"),
         input("Дата (ГГГГ-ММ-ДД): "), input("Время (ЧЧ:ММ): "),
     )
@@ -103,12 +79,12 @@ def _book(actor):
 
 
 def _cancel(actor):
-    club.cancel_training(actor, _id("ID записи"))
+    bookings_serv.cancel_training(actor, _id("ID записи"))
     print("Запись отменена")
 
 
 def _records(actor):
-    records = club.list_records(actor)
+    records = bookings_serv.list_records(actor)
     if not records:
         print("Записей пока нет")
     for record in records:
@@ -118,7 +94,7 @@ def _records(actor):
 
 
 def _bookings_menu(actor):
-    _menu("Записи на тренировки", [
+    run_menu("Записи на тренировки", [
         ("Тренеры и занятое время", partial(_schedule, actor)),
         ("Записать клиента", partial(_book, actor)),
         ("Просмотреть записи", partial(_records, actor)),
@@ -127,7 +103,7 @@ def _bookings_menu(actor):
 
 
 def _add_coach(actor):
-    coach_id = club.add_coach(
+    coach_id = schedule_serv.add_coach(
         actor, input("ФИО (фамилия, имя, отчество): "), input("Специализация: "), input("Email: "),
     )
     print(f"Тренер добавлен. ID: {coach_id}")
@@ -135,7 +111,7 @@ def _add_coach(actor):
 
 def _admin_login():
     actor = auth.login("admin")
-    _menu(f"Администратор {actor.name}", [
+    run_menu(f"Администратор {actor.name}", [
         ("Клиенты", partial(_clients_menu, actor)),
         ("Записи на тренировки", partial(_bookings_menu, actor)),
         ("Добавить тренера", partial(_add_coach, actor)),
@@ -145,7 +121,7 @@ def _admin_login():
 
 def _client_login():
     actor = auth.login("client")
-    _menu(f"Клиент {actor.name}", [
+    run_menu(f"Клиент {actor.name}", [
         ("Моя карточка", partial(_view_client, actor, actor.ClientID)),
         ("Изменить мои данные", partial(_edit_client, actor, actor.ClientID)),
         ("Расписание тренеров", partial(_schedule, actor)),
@@ -153,11 +129,11 @@ def _client_login():
 
 
 def main_menu():
-    _menu("FitnesClub", [
+    run_menu("FitnesClub", [
         ("Вход администратора", _admin_login),
         ("Вход клиента", _client_login),
     ])
 
 
 def setup_menu():
-    _menu("Первый запуск", [("Создать первого администратора", auth.register_admin)], once=True)
+    run_menu("Первый запуск", [("Создать первого администратора", auth.register_admin)], once=True)

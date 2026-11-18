@@ -1,7 +1,6 @@
 from dataclasses import fields
 
-from ..database.database import get_connection
-from ..models.entities import Admin, Client, Coach, Record
+from ..database.db import get_connection
 
 
 class Repository:
@@ -58,10 +57,3 @@ class Repository:
                 f"DELETE FROM {self.table} WHERE {self.key} = ?", (object_id,)
             )
             return cursor.rowcount > 0
-
-
-admins = Repository(Admin)
-clients = Repository(Client)
-coaches = Repository(Coach)
-records = Repository(Record)
-

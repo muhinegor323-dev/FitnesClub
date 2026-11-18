@@ -1,8 +1,8 @@
 import sqlite3
 
-from .database.database import init_db
+from .database.db import init_db
 from .menu import main_menu, setup_menu
-from .services.club import needs_setup
+from .services.auth_serv import needs_setup
 
 
 def main():
