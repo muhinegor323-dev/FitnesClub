@@ -1,7 +1,7 @@
 from functools import partial
 
 from . import auth
-from .services import bookings_serv, schedule_serv, users_serv
+from .services import bookings_serv, export_serv, schedule_serv, users_serv
 from .utils import run_menu
 
 
@@ -109,6 +109,11 @@ def _add_coach(actor):
     print(f"Тренер добавлен. ID: {coach_id}")
 
 
+def _export_records(actor):
+    count, folder = export_serv.export_records(actor)
+    print(f"Экспортировано записей: {count}. Папка: {folder}")
+
+
 def _admin_login():
     actor = auth.login("admin")
     run_menu(f"Администратор {actor.name}", [
@@ -116,6 +121,7 @@ def _admin_login():
         ("Записи на тренировки", partial(_bookings_menu, actor)),
         ("Добавить тренера", partial(_add_coach, actor)),
         ("Добавить администратора", partial(auth.register_admin, actor)),
+        ("Экспорт записей", partial(_export_records, actor)),
     ])
 
 
